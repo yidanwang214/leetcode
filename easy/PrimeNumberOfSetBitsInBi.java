@@ -2,6 +2,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+// Time O(R-L+1)
+// Space O(1)
 public class PrimeNumberOfSetBitsInBi {
     // 一、bit manipulation
     // points i missed out on:
@@ -53,7 +55,7 @@ public class PrimeNumberOfSetBitsInBi {
         return dp;
     }
 
-    // 三brute force
+    // 三、brute force
     // iterate
     // helper func: isPrime(), if isPrime, the num saved to hashset primeNum
     // time: O(n√m), n the range from left to right, m is the number of set bits in
