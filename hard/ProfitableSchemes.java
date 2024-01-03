@@ -1,49 +1,83 @@
 // https://leetcode.com/problems/profitable-schemes/
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 
 public class ProfitableSchemes {
 
-    public static Stack<Integer> stack = new Stack<Integer>();
-    public static int sum = 0;
+    public static ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+    public static ArrayList<ArrayList<Integer>> indexRes = new ArrayList<>();
+    public static int resNum = 0;
+    public static ArrayList<Integer> innerCombo = new ArrayList<Integer>();
+    public static ArrayList<Integer> indexCombo = new ArrayList<Integer>();
+    public static int profitSum = 0;
+    public static int memberSum = 0;
 
-    public static void testRecursiveBreak(int start, int[] arr) {
+    public static void backtrack(int startIndex, int n, int minProfit, int[] group, int[] profit) {
+        for (int i = startIndex; i < profit.length; i++) {
+            innerCombo.add(profit[i]);
+            indexCombo.add(i);
+            profitSum += profit[i];
+            memberSum += group[i];
+            System.out.print("i: " + i + ", innerCombo: ");
+            print(innerCombo);
+            print(indexCombo);
+            System.out.print(" profitSum: " + profitSum + " memberSum: " + memberSum + "\n");
+            if (profitSum < minProfit) {
+                if (memberSum < n) {
+                    backtrack(i + 1, n, minProfit, group, profit);
+                    profitSum -= profit[i];
+                    memberSum -= group[i];
+                    innerCombo.remove(innerCombo.size() - 1);
+                    indexCombo.remove(indexCombo.size() - 1);
+                }
+                if (memberSum >= n) {
+                    profitSum -= profit[i];
+                    memberSum -= group[i];
+                    innerCombo.remove(innerCombo.size() - 1);
+                    indexCombo.remove(indexCombo.size() - 1);
+                    backtrack(i + 1, n, minProfit, group, profit);
+                    break;
+                }
+            } else { // profitSum >= minProfit
+                if (memberSum <= n) {
+                    res.add(copyAL(innerCombo));
+                    indexRes.add(copyAL(indexCombo));
+                    resNum++;
+                    backtrack(i + 1, n, minProfit, group, profit);
+                    profitSum -= profit[i];
+                    memberSum -= group[i];
+                    innerCombo.remove(innerCombo.size() - 1);
+                    indexCombo.remove(indexCombo.size() - 1);
+                }
+                // if(memberSum == n){
+                // res.add(innerCombo);
+                // profitSum -= profit[i];
+                // memberSum -= group[i];
+                // innerCombo.remove(innerCombo.size()-1);
+                // backtrack(i+1, n, minProfit, group, profit);
+                // }
+                if (memberSum > n) {
+                    profitSum -= profit[i];
+                    memberSum -= group[i];
+                    innerCombo.remove(innerCombo.size() - 1);
+                    indexCombo.remove(indexCombo.size() - 1);
+                    backtrack(i + 1, n, minProfit, group, profit);
+                    break;
+                }
 
-        for (int i = start; i < arr.length; i++) {
-            stack.push(arr[i]);
-            sum += arr[i];
-            if (sum <= 10) {
-                printStack(stack);
-                testRecursiveBreak(i + 1, arr);
-                stack.pop();
-                sum -= arr[i];
-            } else {
-                stack.pop();
-                sum -= arr[i];
-                testRecursiveBreak(i + 1, arr);
-                // i = arr.length - 1;
-                break;
             }
         }
-    }
 
-    public static void printStack(Stack<Integer> stack) {
-        System.out.print("[");
-        for (int i = 0; i < stack.size(); i++) {
-            System.out.print(stack.elementAt(i) + ", ");
-        }
-        System.out.print("]" + ", Sum: " + sum + "\n");
     }
 
     public static void print(ArrayList<Integer> arr) {
         System.out.print("[");
         for (int i = 0; i < arr.size(); i++) {
-            System.out.print(i + ", ");
+            System.out.print(arr.get(i) + ", ");
         }
-        System.out.print("]" + ", Sum: " + sum + "\n");
+        System.out.print("]" + ", Sum: " + sum(arr) + " ");
     }
 
     public static int sum(ArrayList<Integer> arr) {
@@ -52,33 +86,37 @@ public class ProfitableSchemes {
             sum += arr.get(i);
         }
         return sum;
+    }
 
+    public static ArrayList<Integer> copyAL(ArrayList<Integer> arr) {
+        ArrayList<Integer> newAL = new ArrayList<>();
+        for (Integer integer : arr) {
+            newAL.add(integer);
+        }
+        return newAL;
     }
 
     public static void main(String[] args) {
-        int[] arr = { 1, 6, 3, 9, 2, 0 }; // subset sum no more than 10
-        testRecursiveBreak(0, arr);
+        int n = 64;
+        int minProfit = 0;
+        int[] group = { 80, 40 };
+        int[] profit = { 88, 88 };
+        backtrack(0, n, minProfit, group, profit);
 
-        // ArrayList<ArrayList<Integer>> outer = new ArrayList<>();
-        // ArrayList<Integer> inner = new ArrayList<Integer>();
-        // ArrayList<Integer> inner2 = new ArrayList<Integer>();
-        // inner.add(1);
-        // inner.add(2);
-        // inner.add(3);
-        // outer.add(inner);
-        // inner2.add(1);
-        // inner2.add(2);
-        // inner2.add(3);
-        // outer.add(inner2);
-        // for (int i = 0; i < outer.size(); i++) {
-        // System.out.print("i: " + i + "; items: ");
-        // for (int j = 0; j < outer.get(i).size(); j++) {
-        // if (outer.get(i).get(j) == 2) {
-        // break;
-        // }
-        // System.out.print(outer.get(i).get(j) + " ");
-        // }
+        // System.out.println("start printing resAL");
+        // for (ArrayList<Integer> i : res) {
+        // print(i);
         // System.out.println();
         // }
+        // System.out.println("stop printing resAL");
+
+        // System.out.println("start printing indexRes");
+        // for (ArrayList<Integer> i : indexRes) {
+        // print(i);
+        // System.out.println();
+        // }
+        // System.out.println("stop printing indexRes");
+
+        System.out.println("resNum: " + resNum);
     }
 }

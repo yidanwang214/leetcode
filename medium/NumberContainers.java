@@ -11,37 +11,38 @@ import javafx.util.Pair;
 // reference: https://leetcode.com/problems/design-a-number-container-system/solutions/2322402/java-python-3-treeset-sortedlist-w-brief-explanation-and-analysis/
 // Time: O(logn) for both change and find, where n is the total count of numbers in the container
 // Space: O(n) for creating 2 maps
-// class NumberContainers {
-//     private Map<Integer, TreeSet<Integer>> numToIndices = new HashMap<>();
-//     private Map<Integer, Integer> indexToNum = new HashMap<>();
+class NumberContainers {
+    private Map<Integer, TreeSet<Integer>> numToIndices = new HashMap<>();
+    private Map<Integer, Integer> indexToNum = new HashMap<>();
 
-//     public NumberContainers() {
-//     }
+    public NumberContainers() {
+    }
 
-//     public void change(int index, int number) {
-//         if (indexToNum.containsKey(index)) {
-//             int preNum = indexToNum.get(index);
-//             numToIndices.get(preNum).remove(index);
-//             if (numToIndices.get(preNum).isEmpty()) {
-//                 numToIndices.remove(preNum); // i didn't hadnle it in my own code
-//             }
-//         }
-//         indexToNum.put(index, number);
-//         numToIndices.computeIfAbsent(number, s -> new TreeSet<>()).add(index);
-//     }
+    public void change(int index, int number) {
+        if (indexToNum.containsKey(index)) {
+            int preNum = indexToNum.get(index);
+            numToIndices.get(preNum).remove(index);
+            if (numToIndices.get(preNum).isEmpty()) {
+                numToIndices.remove(preNum); // i didn't hadnle it in my own code
+            }
+        }
+        indexToNum.put(index, number);
+        numToIndices.computeIfAbsent(number, s -> new TreeSet<>()).add(index);
+    }
 
-//     public int find(int number) {
-//         if (numToIndices.containsKey(number))
-//             return numToIndices.get(number).first();
-//         return -1;
-//     }
-// }
+    public int find(int number) {
+        if (numToIndices.containsKey(number))
+            return numToIndices.get(number).first();
+        return -1;
+    }
+}
 
 // 2. my attempt
 // time: O(n) for inserting
 // space: O(n): the count of numbers in the container
 // attention 1: change can be duplicate: change(56, 31) appeared twice
-// attention 2: if a number is empty set of indices, the number (the entry) should be removed from numIndexHash
+// attention 2: if a number is empty set of indices, the number (the entry)
+// should be removed from numIndexHash
 // change can be duplicate: change(56, 31) appeared twice
 
 class NumIndex {
