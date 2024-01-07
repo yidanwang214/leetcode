@@ -9,17 +9,15 @@ public class MinCostClimbingStairs {
         public int minCostClimbingStairs(int[] cost) {
             this.cost = cost;
             this.cache = new Integer[cost.length];
-            int minCostFromIndex0 = helper(0);
-            int minCostFromIndex1 = helper(1);
+            int minCostFromIndex0 = minCostToDest(0);
+            int minCostFromIndex1 = minCostToDest(1);
             return Math.min(minCostFromIndex0, minCostFromIndex1);
         }
-        private int helper(int start){
+        private int minCostToDest(int start){
             if(start >= cost.length) return 0;
-    
             if(cache[start] != null) return cache[start];
-    
-            int take1Step = helper(start + 1) + cost[start];
-            int take2Step = helper(start + 2) + cost[start];
+            int take1Step = minCostToDest(start + 1) + cost[start];
+            int take2Step = minCostToDest(start + 2) + cost[start];
             cache[start] = Math.min(take1Step, take2Step);
             return cache[start];
         }
