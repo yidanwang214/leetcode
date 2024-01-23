@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class IntegerBreak {
 
     /*
@@ -49,6 +51,26 @@ public class IntegerBreak {
     }
 
     /*
+     * tabulation
+     * dp[i]: the max product of breakdown nums for int i
+     * dp[i] = max(j * dp[i-j], j * (i-j))
+     */
+class Solution {
+    public int integerBreak(int n) {
+        int[] dp = new int[n+1];
+        dp[0] = 0;
+        dp[1] = 0;
+        dp[2] = 1;
+        for(int i = 3; i <= n; i++){ // i stands for integer n
+            for(int j = 1; j < i; j++){
+                int max = Math.max(i-j, dp[i-j]);
+                dp[i] = Math.max(dp[i], j*max);
+            }
+        }        
+        return dp[n];
+    }
+
+    /*
      * 2 <= n <= 58
      * k >= 2
      * 
@@ -88,7 +110,7 @@ public class IntegerBreak {
      * 
      * 
      * 
-     * 1. decision tree without cache
+     * My solution: decision tree without cache
      * background knowledge:
      * to make the product as great as possible, we exclude 0 from the pos int set,
      * i.e, 4=0+4 but 0*4 = 0, and such a feature applies to all
